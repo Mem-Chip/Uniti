@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class UnitData
+public struct EntityData
 {
     public int health;
     public GridPosition position;
-    public string unitName;
-
+    public string entityName;
 }

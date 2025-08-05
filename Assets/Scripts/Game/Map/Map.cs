@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    // Tiles in the map
     public List<Tile> tiles = new List<Tile>();
-    public List<Unit> units = new List<Unit>();
+    // Entities on the map
+    public List<Entity> entities = new List<Entity>();
+    // Dictionary to quickly access tiles by their grid position
     public Dictionary<GridPosition, Tile> tileMap;
     void Start()
     {
+        // Initialize the tile map from the list of tiles
         tileMap = new Dictionary<GridPosition, Tile>();
         foreach (Tile tile in tiles)
         {
@@ -22,10 +26,10 @@ public class Map : MonoBehaviour
         }
         return null;
     }
-    public Unit getUnitAt(GridPosition position)
+    public Entity getEntityAt(GridPosition position)
     {
         Tile tile = getTileAt(position);
         if (tile != null) return null;
-        return tile.unitonTile;
+        return tile.entityonTile;
     }
 }

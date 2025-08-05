@@ -12,7 +12,8 @@ public static class DiceRolls
         }
         return total;
     }
-
+    // Rolls dice and keeps the highest or lowest results based on the direction parameter
+    // If direction is true, keeps the highest results; if false, keeps the lowest results
     public static int RollDiceandKeep(int sides, int rolls, int keep, bool direction)
     {
         if (keep > rolls)
@@ -38,7 +39,8 @@ public static class DiceRolls
             }
         return total;
     }
-
+    // Rolls a D20 with modifiers and status effects
+    // Status can be 0 (normal), 1 (advantage), or 2 (disadvantage)
     public static int D20(int modifiers = 0, int status = 0)
     {
         int roll = Random.Range(1, 21);

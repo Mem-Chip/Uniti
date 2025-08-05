@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Entity : MonoBehaviour
 {
-    public UnitData unitData;
+    public EntityData stats;
 }

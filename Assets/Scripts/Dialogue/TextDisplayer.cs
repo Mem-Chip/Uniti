@@ -59,7 +59,7 @@ public class TextDisplayer : MonoBehaviour
 
     private void Start()
     {
-        var dialogue = Resources.Load<TextAsset>($"Dialogues/{DialogueLoader.DialogueID}");
+        var dialogue = UnityEngine.Resources.Load<TextAsset>($"Dialogues/{DialogueLoader.DialogueID}");
         Debug.Log(DialogueLoader.DialogueID);
         LoadNewDialogue(ParseFromCSV(dialogue));
     }
@@ -97,7 +97,7 @@ public class TextDisplayer : MonoBehaviour
         {
             if (!portraits.TryGetValue(line.Left, out var leftSprite))
             {
-                leftSprite = Resources.Load<Sprite>($"Portraits/{line.Left}");
+                leftSprite = UnityEngine.Resources.Load<Sprite>($"Portraits/{line.Left}");
                 if (leftSprite != null) portraits[line.Left] = leftSprite;
                 else Debug.LogWarning($"Portrait not found for {line.Left}");
             }
@@ -112,7 +112,7 @@ public class TextDisplayer : MonoBehaviour
         {
             if (!portraits.TryGetValue(line.Right, out var rightSprite))
             {
-                rightSprite = Resources.Load<Sprite>($"Portraits/{line.Right}");
+                rightSprite = UnityEngine.Resources.Load<Sprite>($"Portraits/{line.Right}");
                 if (rightSprite != null) portraits[line.Right] = rightSprite;
             }
             RightPortrait.sprite = rightSprite;
@@ -122,7 +122,7 @@ public class TextDisplayer : MonoBehaviour
         }
         else RightPortrait.enabled = false;
 
-        if (string.IsNullOrEmpty(line.Background)) Background.sprite = Resources.Load<Sprite>(line.Background);
+        if (string.IsNullOrEmpty(line.Background)) Background.sprite = UnityEngine.Resources.Load<Sprite>(line.Background);
 
         if (line.Speaker != null && line.Speaker != "") dialogueText.text = (
             $"{line.Speaker}："

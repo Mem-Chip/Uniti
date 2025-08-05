@@ -1,8 +1,13 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
-public struct Resource<T> {
-    T max;
-    T now;
+public delegate void RecoverResource<T>(T finalValue);
+
+public struct Resource<T>
+{
+    public T max;
+    public T now;
 
     public Resource(T max)
     {
@@ -16,9 +21,10 @@ public struct Resource<T> {
     }
 }
 
-public struct Resources {
-    Resource<int> action;
-    Resource<float> speed;
+public struct Resources
+{
+    public Resource<int> action;
+    public Resource<float> speed;
 }
 
 public struct EntityData
@@ -27,5 +33,5 @@ public struct EntityData
     public int healthMax;
     public GridPosition position;
     public string entityName;
-    public Resources resources;
+    public Resources resources; //角色资源
 }

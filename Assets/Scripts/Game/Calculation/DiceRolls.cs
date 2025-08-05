@@ -38,7 +38,7 @@ public static class DiceRolls
         return total;
     }
 
-    public static int D20(int status = 0, int modifiers = 0)
+    public static int D20(int modifiers = 0, int status = 0)
     {
         int roll = Random.Range(1, 21);
         int roll1 = Random.Range(1, 21);

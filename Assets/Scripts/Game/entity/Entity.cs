@@ -12,12 +12,11 @@ public class Entity : MonoBehaviour
 
     public void Initialize(EntityConfig config)
     {
-        this.data = config.data;
+        data = config.data;
     }
 
     public IEnumerator OnTurn()
     {
-        Debug.Log(data.entityName + "dawdawdawdw");
         yield return null;
     }
 }

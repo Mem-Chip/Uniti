@@ -51,14 +51,14 @@ public class BattleManager : MonoBehaviour
         BattleEndEvent?.Invoke();       //结束战斗事件
     }
 
-    private bool IsBattleEnd()
+    private bool IsBattleEnd()          //判断战斗结束辅助函数
     {
         if (battleTurn == 10) return true;
 
         return false;
     }
 
-    private IEnumerator BattleLoop()
+    private IEnumerator BattleLoop()       //战斗循环
     {
         while(!IsBattleEnd())
         {

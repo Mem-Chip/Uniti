@@ -15,7 +15,7 @@ public struct GamePosition
     public GridPosition gridPosition;
     public float y;
 
-    public GamePosition(int x, int z, int y = 0)
+    public GamePosition(int x = 0, int z = 0, int y = 0)
     {
         gridPosition = new GridPosition(x, z);
         this.y = y;

@@ -1,10 +1,57 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+public class BattleManager : MonoBehaviour
+{
+    private Queue<Entity> initiativeQueue = new Queue<Entity>();
+    public Queue<Entity> InitiativeQueue => initiativeQueue;
 
+    private Queue<Entity> OrderInitiativeQueue(List<Entity> list)   //战斗实体先攻排序
+    {
+        return new Queue<Entity>(list.OrderByDescending(e => e.stats.initiative));  //按先攻排序
+    }
+
+    public void AddEntityToBattle(List<Entity> newEntities)     //将一堆实体添加到战斗
+    {
+        if (newEntities == null || newEntities.Count == 0) return;  //互防式编程
+
+        initiativeQueue = OrderInitiativeQueue(initiativeQueue.Concat(newEntities).ToList());   //将队列和新列表合并，转换为列表后排序，重新生成按顺序的先攻队列
+    }
+    public void AddEntityToBattle(Entity newEntity) => AddEntityToBattle(new List<Entity> { newEntity });   //重载，提供加入单个实体的方法
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+using System.Collections.Generic;
+using UnityEngine;
 // This class manages the turn logic.
 // It handles the start of the battle, calculates initiative, and manages turns
-/*
+
 
 The logic are as follows:
 
@@ -19,6 +66,7 @@ This flag is checked in the Update method to determine if the turn should be tic
 So at the very next frame, TickTurn is called to proceed to the next entity.
 
 */
+/*
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance;
@@ -103,3 +151,4 @@ public class BattleManager : MonoBehaviour
         }
     }
 }
+*/

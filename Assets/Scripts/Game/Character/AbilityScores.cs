@@ -50,4 +50,15 @@ public struct AbilityScores
             }
         }
     }
+
+    public static AbilityScores operator +(AbilityScores left, AbilityScores right)   //相加
+    {
+        return new AbilityScores(
+            left.strength + right.strength,
+            left.dexterity + right.dexterity,
+            left.constitution + right.constitution,
+            left.intelligence + right.intelligence,
+            left.wisdom + right.wisdom,
+            left.charisma + right.charisma);
+    }
 }

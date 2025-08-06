@@ -27,15 +27,13 @@ public class Entity :
     public event Action OnTurnStart;     //回合开始事件
     public event Action OnTurnEnd;     //回合结束事件
 
-    //效果栏
-    public List<Effect> _effectsICast;
-    private List<Effect> _effectList;
-
+    public List<Effect> EffectCastList { get; protected set; }
+    public List<Effect> EffectList { get; protected set; }
 
     public GameObject Initialize(EntityData data)
     {
         Data = data;
-        return this.gameObject;
+        return gameObject;
     }
 
     public IEnumerator OnTurn()

@@ -28,6 +28,9 @@ public class BattleManager : MonoBehaviour
     public event Action BattleStartEvent;       //开始战斗事件
     public event Action BattleEndEvent;          //结束战斗事件
 
+    public event Action<Entity> EntityTurnStartEvent;  //实体开始回合事件
+    public event Action<Entity> EntityTurnEndEvent;    //实体结束回合事件
+
     private Coroutine battleCoroutine;         //战斗协程
 
     public void StartBattle()                   //暴露给外界，开始战斗
@@ -63,8 +66,10 @@ public class BattleManager : MonoBehaviour
         while(!IsBattleEnd())
         {
             Entity current = initiativeQueue.Dequeue();
+            EntityTurnStartEvent?.Invoke(current);  //触发实体开始回合事件
             yield return current.OnTurn();
             initiativeQueue.Enqueue(current);
+            EntityTurnEndEvent?.Invoke(current);    //触发实体结束回合事件
 
             battleTurn += 1;
         }

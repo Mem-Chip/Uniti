@@ -15,7 +15,7 @@ public class Entity :
     public GameObject Initialize(EntityData data)
     {
         Data = data;
-        return this.gameObject;
+        return gameObject;
     }
 
     public IEnumerator OnTurn()

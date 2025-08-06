@@ -14,7 +14,7 @@ public class BattleManager : MonoBehaviour
 
     private Queue<Entity> OrderInitiativeQueue(List<Entity> list)                       //战斗实体先攻排序
     {
-        return new Queue<Entity>(list.OrderByDescending(e => e.Data.initiative));      //按先攻排序
+        return new Queue<Entity>(list.OrderByDescending(e => e.Data.Initiative));      //按先攻排序
     }
 
     public void AddEntityToBattle(List<Entity> newEntities)                                                 //将一堆实体添加到战斗
@@ -68,9 +68,9 @@ public class BattleManager : MonoBehaviour
             Entity current = initiativeQueue.Dequeue();
             EntityTurnStartEvent?.Invoke(current);  //触发实体开始回合事件
             yield return current.OnTurn();
-            initiativeQueue.Enqueue(current);
             EntityTurnEndEvent?.Invoke(current);    //触发实体结束回合事件
-
+            initiativeQueue.Enqueue(current);
+            
             battleTurn += 1;
         }
         yield return null;

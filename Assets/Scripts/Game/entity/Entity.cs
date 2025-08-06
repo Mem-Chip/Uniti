@@ -1,18 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-public struct EntityConfig  //生成预制体所需参数，提供给EntityCreator
+public class Entity :
+    MonoBehaviour,
+    ICreatable<EntityData>
 {
-    public EntityData data;
-}
+    public EntityData Data;
 
-public class Entity : MonoBehaviour
-{
-    public EntityData data; //实体数据
-
-    public void Initialize(EntityConfig config)
+    public string PREFABPATH
     {
-        data = config.data;
+        get => "Prefabs/Entity";
+    }
+
+    public GameObject Initialize(EntityData data)
+    {
+        Data = data;
+        return this.gameObject;
     }
 
     public IEnumerator OnTurn()

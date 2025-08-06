@@ -22,7 +22,7 @@ public class EntityCreator: MonoBehaviour
     {
         var config = new EntityConfig { data = data };
 
-        GameObject entity = Instantiate(Resources.Load<GameObject>("Prefab/小大厨"));   //用预制体生成实例
+        GameObject entity = Instantiate(Resources.Load<GameObject>("Prefabs/Entity"));   //用预制体生成实例
         entity.GetComponent<Entity>().Initialize(config);   //生成
         return entity;
     }

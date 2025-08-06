@@ -9,7 +9,7 @@ public class MapCreator : MonoBehaviour
 
     public void test()
     {
-        GameObject tilePrefab = UnityEngine.Resources.Load<GameObject>("Prefab/Tile");
+        GameObject tilePrefab = UnityEngine.Resources.Load<GameObject>("Prefabs/Tile");
         var map = new GameObject("Map").AddComponent<Map>();
         for (int i = 0; i < 10; i++)
         {

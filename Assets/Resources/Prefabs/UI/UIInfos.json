@@ -1,0 +1,11 @@
+{
+    "Prefab1": {
+      "UIName": "Prefab1",
+      "IsCache": true,
+      "IsDynamic": false,
+      "Layer": "Front",
+      "OverlayMode": "Additive",
+      "ControlMode": "Player"
+    }
+}
+  

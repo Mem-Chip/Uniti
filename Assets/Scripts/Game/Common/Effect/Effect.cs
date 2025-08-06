@@ -9,11 +9,13 @@ public abstract class Effect
         this.duration = duration;
     }
 
-    public virtual void HandleEffect()
+    protected abstract void CustomHandleEffect();
+    protected void HandleEffect()
     {
+        CustomHandleEffect();
         if (--duration == 0) DeEffect();                 //小于0的都视作无限持续时间
     }
 
-    public abstract void EnEffect();
-    public abstract void DeEffect();
+    protected abstract void EnEffect();
+    protected abstract void DeEffect();
 }

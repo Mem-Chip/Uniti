@@ -3,18 +3,18 @@ using System.Linq;
 public class Character
 {
     public string name;                                     //名字
-    private AbilityScores _baseAbilityScores;               //基础属性点
-    public AbilityScores AbilityScores
+    private Ability _baseAbilityScores;               //基础属性点
+    public Ability AbilityScores
     {
         get => GetAbilityScores();
     }
 
-    public delegate (AbilityScoreType abilityScoreType, int bonus) CalcAbilityScoresDelegate();
+    public delegate (AbilityType abilityScoreType, int bonus) CalcAbilityScoresDelegate();
     public event CalcAbilityScoresDelegate OnCalcAbilityScores;     //计算属性值事件
-    private AbilityScores InvokeOnCalcAbilityScores()               //触发事件
+    private Ability InvokeOnCalcAbilityScores()               //触发事件
     {
         if (OnCalcAbilityScores == null) return new();              //处理空事件
-        AbilityScores bonus = new();
+        Ability bonus = new();
         OnCalcAbilityScores
             .GetInvocationList()                                    //获取所有方法
             .Select(                                                //对每个方法
@@ -26,14 +26,14 @@ public class Character
         return bonus;
     }
 
-    private AbilityScores CalcAbilityScores()                       //计算属性值
+    private Ability CalcAbilityScores()                       //计算属性值
     {
-        AbilityScores bonus = InvokeOnCalcAbilityScores();
+        Ability bonus = InvokeOnCalcAbilityScores();
 
         return _baseAbilityScores + bonus;
     }
 
-    public AbilityScores GetAbilityScores()                         //返回属性值
+    public Ability GetAbilityScores()                         //返回属性值
     {
         return CalcAbilityScores();
     }

@@ -1,6 +1,6 @@
 using System;
 
-public enum AbilityScoreType
+public enum AbilityType
 {
     Strength,
     Dexterity,
@@ -10,11 +10,11 @@ public enum AbilityScoreType
     Charisma
 }
 
-public struct AbilityScores
+public struct Ability
 {
     public int strength, dexterity, constitution, intelligence, wisdom, charisma;
 
-    public AbilityScores(int strength = 0, int dexterity = 0, int constitution = 0, int intelligence = 0, int wisdom = 0, int charisma = 0)
+    public Ability(int strength = 0, int dexterity = 0, int constitution = 0, int intelligence = 0, int wisdom = 0, int charisma = 0)
     {
         this.strength = strength;
         this.dexterity = dexterity;
@@ -24,36 +24,36 @@ public struct AbilityScores
         this.charisma = charisma;
     }
 
-    public int this[AbilityScoreType type]           //提供根据属性类型的访问方法
+    public int this[AbilityType type]           //提供根据属性类型的访问方法
     {
         get => type switch
         {
-            AbilityScoreType.Strength => strength,
-            AbilityScoreType.Dexterity => dexterity,
-            AbilityScoreType.Constitution => constitution,
-            AbilityScoreType.Intelligence => intelligence,
-            AbilityScoreType.Wisdom => wisdom,
-            AbilityScoreType.Charisma => charisma,
+            AbilityType.Strength => strength,
+            AbilityType.Dexterity => dexterity,
+            AbilityType.Constitution => constitution,
+            AbilityType.Intelligence => intelligence,
+            AbilityType.Wisdom => wisdom,
+            AbilityType.Charisma => charisma,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
         set
         {
             switch (type)
             {
-                case AbilityScoreType.Strength: strength = value; break;
-                case AbilityScoreType.Dexterity: dexterity = value; break;
-                case AbilityScoreType.Constitution: constitution = value; break;
-                case AbilityScoreType.Intelligence: intelligence = value; break;
-                case AbilityScoreType.Wisdom: wisdom = value; break;
-                case AbilityScoreType.Charisma: charisma = value; break;
+                case AbilityType.Strength: strength = value; break;
+                case AbilityType.Dexterity: dexterity = value; break;
+                case AbilityType.Constitution: constitution = value; break;
+                case AbilityType.Intelligence: intelligence = value; break;
+                case AbilityType.Wisdom: wisdom = value; break;
+                case AbilityType.Charisma: charisma = value; break;
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
     }
 
-    public static AbilityScores operator +(AbilityScores left, AbilityScores right)   //相加
+    public static Ability operator +(Ability left, Ability right)   //相加
     {
-        return new AbilityScores(
+        return new Ability(
             left.strength + right.strength,
             left.dexterity + right.dexterity,
             left.constitution + right.constitution,

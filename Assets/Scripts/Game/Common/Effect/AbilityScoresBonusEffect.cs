@@ -2,11 +2,11 @@ using System;
 
 public sealed class AbilityScoresBonusEffect : Effect
 {
-    private readonly AbilityScoreType _abilityScoreType;
+    private readonly AbilityType _abilityScoreType;
     private readonly int _bonus;
-    private readonly Func<(AbilityScoreType _abilityScoreType, int _bonus)> _effectFunc;
+    private readonly Func<(AbilityType _abilityScoreType, int _bonus)> _effectFunc;
 
-    public AbilityScoresBonusEffect((AbilityScoreType abilityScoreType, int bonus) data, string name, Entity target, Entity effector = null, int duration = -2) : base(name, target, effector, duration)
+    public AbilityScoresBonusEffect((AbilityType abilityScoreType, int bonus) data, string name, Entity target, Entity effector = null, int duration = -2) : base(name, target, effector, duration)
     {
         _abilityScoreType = data.abilityScoreType;
         _bonus = data.bonus;

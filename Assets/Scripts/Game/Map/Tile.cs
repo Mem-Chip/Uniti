@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
         if (IsEmpty())
         {
             _entityOnTile = entity;
-            entity.Data.tileOn = this;  //保证双向绑定
+            entity.Data.TileOn = this;  //保证双向绑定
         }
     }
 }

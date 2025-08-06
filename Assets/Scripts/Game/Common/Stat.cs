@@ -7,8 +7,6 @@ using System.Collections.Generic;
             T Max: 当前最大值
             T Current: 当前值
         公共方法:
-            SetMax(T value) 设置最大值，自动限制当前值
-            SetCurrent(T value) 设置当前值，自动限制当前值
             ModifyCurrent(T delta) 调整当前值，输入变化量，支持正负，调用SetCurrent以设置最终当前值
    
 */
@@ -36,7 +34,7 @@ public class Stat<T> where T : struct
         _current = baseMax;
     }
 
-    public void SetMax(T value)     //设置最大值
+    private void SetMax(T value)     //设置最大值
     {
         //防止当前值超过最大值
         _max = value;
@@ -55,7 +53,7 @@ public class Stat<T> where T : struct
         SetCurrent(finalCurrent);
     }
 
-    public void SetCurrent(T value)  //设置当前值
+    private void SetCurrent(T value)  //设置当前值
     {
         _current = value;
         if (Comparer<T>.Default.Compare(_current, default) < 0)  //限制不小于最小值

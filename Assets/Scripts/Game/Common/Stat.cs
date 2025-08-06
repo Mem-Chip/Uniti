@@ -19,11 +19,11 @@ public class Stat<T> where T : struct
     public T max;           // 最大值
     public T current;       // 当前值
 
-    public Stat(T value)
+    public Stat(T baseMax)
     {
-        baseMax = value;
-        max = value;
-        current = value;
+        this.baseMax = baseMax;
+        max = baseMax;
+        current = baseMax;
     }
 
     public void SetMax(T value)     //设置最大值

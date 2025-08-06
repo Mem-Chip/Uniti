@@ -1,35 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Map : MonoBehaviour
+public class Map :
+    MonoBehaviour,
+    ICreatable<Dictionary<GridPosition, Tile>>
 {
-    // Tiles in the map
-    public List<Tile> tiles = new List<Tile>();
-    // Entities on the map
-    public List<Entity> entities = new List<Entity>();
-    // Dictionary to quickly access tiles by their grid position
-    public Dictionary<GridPosition, Tile> tileMap;
-    void Start()
+    private Dictionary<GridPosition, Tile> _data;
+    public Dictionary<GridPosition, Tile> Data { get => _data; private set => _data = value; }
+
+    public GameObject Initialize(Dictionary<GridPosition, Tile> data)
     {
-        // Initialize the tile map from the list of tiles
-        tileMap = new Dictionary<GridPosition, Tile>();
-        foreach (Tile tile in tiles)
-        {
-            tileMap[tile.gridPosition] = tile;
-        }
+        Data = data;
+        return gameObject;
     }
-    public Tile getTileAt(GridPosition position)
+    
+    public Tile GetTileAt(GridPosition position)
     {
-        if (tileMap.TryGetValue(position, out Tile tile))
+        if (_data.TryGetValue(position, out Tile tile))
         {
             return tile;
         }
         return null;
     }
-    public Entity getEntityAt(GridPosition position)
+    public Entity GetEntityAt(GridPosition position)
     {
-        Tile tile = getTileAt(position);
-        if (tile != null) return null;
-        return tile.entityonTile;
+        Tile tile = GetTileAt(position);
+        if (tile == null) return null;
+        return tile.EntityOnTile;
     }
 }

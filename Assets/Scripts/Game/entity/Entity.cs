@@ -7,15 +7,10 @@ public class Entity :
 {
     public EntityData Data;
 
-    public string PREFABPATH
-    {
-        get => "Prefabs/Entity";
-    }
-
     public GameObject Initialize(EntityData data)
     {
         Data = data;
-        return gameObject;
+        return this.gameObject;
     }
 
     public IEnumerator OnTurn()

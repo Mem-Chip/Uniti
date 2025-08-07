@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 22435860}
   m_Layer: 0
   m_Name: GameSystem
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1319,11 +1319,11 @@ Transform:
   m_GameObject: {fileID: 1981554283}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1280, y: -720, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2087556701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087556697
 GameObject:
@@ -1424,6 +1424,7 @@ RectTransform:
   - {fileID: 1077275640}
   - {fileID: 1117511479}
   - {fileID: 722868817}
+  - {fileID: 1981554286}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1462,5 +1463,4 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 2087556701}
-  - {fileID: 1981554286}
   - {fileID: 22435861}

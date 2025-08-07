@@ -2,76 +2,146 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using NUnit.Framework;
+using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class BattleManager : MonoBehaviour
+//单例化
+public class BattleManager : SingletonMono<BattleManager>
 {
-    private Queue<Entity> initiativeQueue = new Queue<Entity>();    //先攻队列
-    public Queue<Entity> InitiativeQueue => initiativeQueue;
+    /*--------------------------------------------------variant and init----------------------------------------------------------------------------------------*/
 
-    private int battleTurn = 0;                                     //回合轮数
-    public int BattleTurn => battleTurn;
+    private static readonly List<(ICanBattle combatant, int initiative)> _combatantsList = new();
+    public static IReadOnlyList<(ICanBattle combatant, int initiative)> CombatantsList => _combatantsList.AsReadOnly();     //参战者列表                                                                   //参战者和先攻值 
+    private static readonly Queue<ICanBattle> _initiativeQueue = new();
+    public static IEnumerable<ICanBattle> InitiativeQueue => _initiativeQueue;                                      //先攻队列
+    public static event Action CombatantsListChangeEvent;                       //参战者列表变化事件
+    public static event Action InitiativeQueueChangeEvent;                      //先攻顺序变化事件
 
-    private Queue<Entity> OrderInitiativeQueue(List<Entity> list)                       //战斗实体先攻排序
+    public static int BattleTurn { get; private set; } = 0;                                                         //回合轮数
+    public static ICanBattle CombatantOnTurn { get; private set; } = null;                                                 //正在回合的实例
+    public static event Action BattleStartEvent;                                                                    //开始战斗事件
+    public static event Action BattleEndEvent;                                                                      //结束战斗事件
+    public static event Action NextTurnEvent;
+    public static event Action TurnStartEvent;                                                                //实体开始回合事件
+    public static event Action TurnEndEvent;                                                                  //实体结束回合事件
+
+    private Coroutine _battleCoroutine = null;                                                                              //私有，战斗协程
+
+    private List<ICanBattle> _startBattlePara = new();
+
+    /*--------------------------------------------------functions--------------------------------------------------------------------------------------------*/
+
+    private void OrderInitiativeQueue()                                                   //排序战斗实体
     {
-        return new Queue<Entity>(list.OrderByDescending(e => e.Data.Initiative));      //按先攻排序
+        _initiativeQueue.Clear();
+        //按先攻排序
+        _combatantsList
+            .OrderByDescending(i => i.initiative)
+            .ToList()
+            .ForEach(t => _initiativeQueue.Enqueue(t.combatant));
+
+        InitiativeQueueChangeEvent?.Invoke();
     }
 
-    public void AddEntityToBattle(List<Entity> newEntities)                                                 //将一堆实体添加到战斗
+    public void AddToBattle(ICanBattle newCombatant)                                                           //将列表中实体添加到战斗
     {
-        if (newEntities == null || newEntities.Count == 0) return;                              //互防式编程
+        if (newCombatant == null) return;
 
-        initiativeQueue = OrderInitiativeQueue(initiativeQueue.Concat(newEntities).ToList());   //将队列和新列表合并，转换为列表后排序，重新生成按顺序的先攻队列
+        newCombatant.EnBattle();
+
+        //添加到参战列表
+        _combatantsList.Add((newCombatant, newCombatant.Getinitiative()));
+
+        CombatantsListChangeEvent?.Invoke();
+        OrderInitiativeQueue();
     }
-    public void AddEntityToBattle(Entity newEntity) => AddEntityToBattle(new List<Entity> { newEntity });   //重载，提供加入单个实体的方法
-
-    public event Action BattleStartEvent;       //开始战斗事件
-    public event Action BattleEndEvent;          //结束战斗事件
-
-    public event Action<Entity> EntityTurnStartEvent;  //实体开始回合事件
-    public event Action<Entity> EntityTurnEndEvent;    //实体结束回合事件
-
-    private Coroutine battleCoroutine;         //战斗协程
-
-    public void StartBattle()                   //暴露给外界，开始战斗
+    public void AddToBattle(List<ICanBattle> newCombatants)
     {
-        if (battleCoroutine == null)
+        if (newCombatants == null || newCombatants.Count() == 0) return;
+
+        //添加到参战列表
+        newCombatants.ForEach(c =>
         {
-            List<Entity> allEntities = FindObjectsByType<Entity>(FindObjectsSortMode.None).ToList<Entity>();
-            OnBattleStart(allEntities);
+            c.EnBattle();
+            _combatantsList.Add((c, c.Getinitiative()));
+        });
+
+        CombatantsListChangeEvent?.Invoke();
+        OrderInitiativeQueue();
+    }
+    public void RemoveFromBattle(ICanBattle combatant)
+    {
+        if (combatant == null) return;
+
+        combatant.DeBattle();
+        _combatantsList.ForEach(t =>
+        {
+            if (t.combatant == combatant) _combatantsList.Remove(t);
+        });
+
+        CombatantsListChangeEvent?.Invoke();
+        OrderInitiativeQueue();
+    }
+    public void RemoveFromBattle(List<ICanBattle> combatants)
+    {
+        if (combatants == null || combatants.Count() == 0) return;
+
+        combatants.ForEach(c =>
+        {
+            c.DeBattle();
+            _combatantsList.ForEach(t =>
+            {
+                if (t.combatant == c) _combatantsList.Remove(t);
+            });
+        });
+
+        CombatantsListChangeEvent?.Invoke();
+        OrderInitiativeQueue();
+    }
+
+    public void StartBattle(List<ICanBattle> battleEntities)                                                                //开始战斗方法
+    {
+        //保持协程单例
+        if (_battleCoroutine == null)
+        {
+            //传入数据
+            _startBattlePara = battleEntities;
+
+            //启动战斗流程
+            Battle();
         }
     }
 
-    private void OnBattleStart(List<Entity> entities)
+    private void Battle()                                                                                                   //私有，仅组织战斗事件流程
     {
-        battleTurn = 0;
-        AddEntityToBattle(entities);
-
-        BattleStartEvent?.Invoke();     //开始战斗事件
-
-        battleCoroutine = StartCoroutine(BattleLoop());      //开始战斗循环协程
-
-        BattleEndEvent?.Invoke();       //结束战斗事件
+        //开始战斗事件
+        BattleStartEvent?.Invoke();
+        //开始战斗循环协程
+        _battleCoroutine = StartCoroutine(BattleLoop());
+        //结束战斗事件
+        BattleEndEvent?.Invoke();
     }
 
-    private bool IsBattleEnd()          //判断战斗结束辅助函数
+    private bool IsBattleEnd()                                                                                              //判断战斗是否结束
     {
-        if (battleTurn == 10) return true;
-
         return false;
     }
 
-    private IEnumerator BattleLoop()       //战斗循环
+    private IEnumerator BattleLoop()                                                                                        //战斗循环
     {
-        while(!IsBattleEnd())
+        //判断战斗是否结束，循环
+        while (!IsBattleEnd())
         {
-            Entity current = initiativeQueue.Dequeue();
-            EntityTurnStartEvent?.Invoke(current);  //触发实体开始回合事件
-            yield return current.OnTurn();
-            EntityTurnEndEvent?.Invoke(current);    //触发实体结束回合事件
-            initiativeQueue.Enqueue(current);
+            CombatantOnTurn = _initiativeQueue.Dequeue();
+
+            NextTurnEvent?.Invoke();
+
+            yield return CombatantOnTurn.TurnLoop();
+
             
-            battleTurn += 1;
         }
         yield return null;
     }
@@ -137,17 +207,17 @@ public class BattleManager : MonoBehaviour
         }
     }
     public Entity EntityonTurn;
-    public List<Entity> entitiesOnBattle = new List<Entity>();
+    public List<ICanBattle> entitiesOnBattle = new List<ICanBattle>();
     public bool isBattleActive = false;
     public bool endTurnExecuted = false;
 
-    public void StartBattle(List<Entity> entities)
+    public void StartBattle(List<ICanBattle> entities)
     {
         entitiesOnBattle = CalculateInitiative(entities);
         isBattleActive = true;
         TickTurn();
     }
-    private List<Entity> CalculateInitiative(List<Entity> entities)
+    private List<ICanBattle> CalculateInitiative(List<ICanBattle> entities)
     {
         Debug.Log("Initiative not implemented");
         return entities;

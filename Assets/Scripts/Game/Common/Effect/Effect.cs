@@ -6,7 +6,7 @@ public abstract class Effect
     public string Name { get; private set; }    //持续时间
     public int duration;                        //唯一id
     public Entity Target { get; }               //受效果者
-    public Entity Effector { get; }             //施加效果
+    public Entity Effector { get; }             //施加效果者
 
     protected Effect(string Name, Entity target, Entity effector = null, int duration = -2)
     {
